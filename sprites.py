@@ -1,1 +1,1 @@
-froms settings import*
+from settings import*
