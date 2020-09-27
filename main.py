@@ -21,9 +21,12 @@ class Game:
         # declaring variable for loop to run
         self.running = True
 
+    # start new game
     def new(self):
-        # start new game
+        # making a new sprite group
         self.all_sprites = pg.sprite.Group()
+        self.player = Player()
+        self.all_sprites.add(self.player)
         # running new game
         self.run()
 
@@ -37,8 +40,9 @@ class Game:
             self.update()
             self.draw()
 
+    # game loop update
     def update(self):
-        # game loop update
+        # updating properties
         self.all_sprites.update()
         pass
 
@@ -54,10 +58,12 @@ class Game:
                     self.playing = False
                 self.running = False
 
+    # game loop draw
     def draw(self):
-        # game loop draw
+
         # draw
         self.screen.fill((0, 0, 0))
+        # drawing sprite on screen
         self.all_sprites.draw(self.screen)
         # post drawing
         pg.display.flip()
