@@ -25,8 +25,18 @@ class Game:
     def new(self):
         # making a new sprite group
         self.all_sprites = pg.sprite.Group()
+        # making platform group to hold all the platforms
+        self.platforms = pg.sprite.Group()
         self.player = Player()
         self.all_sprites.add(self.player)
+        # spawning a platform
+        p1 = Platform(0, height-40, width, 40)
+        # adding sprite to both groups
+        self.all_sprites.add(p1)
+        self.platforms.add(p1)
+        p2 = Platform(width/2-50, height*3/4, 100, 20)
+        self.all_sprites.add(p2)
+        self.platforms.add(p2)
         # running new game
         self.run()
 
@@ -44,7 +54,11 @@ class Game:
     def update(self):
         # updating properties
         self.all_sprites.update()
-        pass
+        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+        if hits:
+            # setting player y position to platform top
+            self.player.pos.y = hits[0].rect.top
+            self.player.vel.y = 0
 
     def events(self):
         # game loops events
