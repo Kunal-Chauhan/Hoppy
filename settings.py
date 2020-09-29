@@ -5,7 +5,7 @@ title = "Platform Game"
 FPS = 60
 
 # player properties
-PLAYER_ACC = 0.5
+PLAYER_ACC = 0.8
 PLAYER_FRICTION = -0.12
 
 # defined colours
