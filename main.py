@@ -27,16 +27,13 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         # making platform group to hold all the platforms
         self.platforms = pg.sprite.Group()
-        self.player = Player()
+        self.player = Player(self)
         self.all_sprites.add(self.player)
         # spawning a platform
-        p1 = Platform(0, height-40, width, 40)
-        # adding sprite to both groups
-        self.all_sprites.add(p1)
-        self.platforms.add(p1)
-        p2 = Platform(width/2-50, height*3/4, 100, 20)
-        self.all_sprites.add(p2)
-        self.platforms.add(p2)
+        for plat in PLATFORM_LIST:
+            p = Platform(*plat)
+            self.all_sprites.add(p)
+            self.platforms.add(p)
         # running new game
         self.run()
 
@@ -54,11 +51,14 @@ class Game:
     def update(self):
         # updating properties
         self.all_sprites.update()
-        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
-        if hits:
-            # setting player y position to platform top
-            self.player.pos.y = hits[0].rect.top
-            self.player.vel.y = 0
+        # check if playeer hits a platfrom only if falling
+        # if velocity is downward
+        if self.player.vel.y > 0:
+            hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+            if hits:
+                # setting player y position to platform top
+                self.player.pos.y = hits[0].rect.top+1
+                self.player.vel.y = 0
 
     def events(self):
         # game loops events
@@ -71,6 +71,10 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.running = False
+            # checking jump event
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.player.jump()
 
     # game loop draw
     def draw(self):
@@ -91,7 +95,6 @@ class Game:
         pass
 
 
-# make a new game object
 G = Game()
 # showing start screen
 G.show_start_screen()
