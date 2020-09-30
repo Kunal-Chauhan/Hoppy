@@ -5,9 +5,10 @@ vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     # initializing the sprite
-    def __init__(self):
+    def __init__(self, game):
         pg.sprite.Sprite.__init__(self)
         # surface to draw sprite on
+        self.game = game
         self.image = pg.Surface((30, 40))
         # filling suface with colour
         self.image.fill(YELLOW)
@@ -20,10 +21,19 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
+    # defining jump
+    def jump(self):
+        # jumping only when standing on platform
+        self.rect.x += 1
+        hits = pg.sprite.spritecollide(self, self.game.platforms, False)
+        self.rect.x -= 1
+        if hits:
+            self.vel.y = -15
+
     # updating the sprite
     def update(self):
         # adding gravity to our player
-        self.acc = vec(0, 0.5)
+        self.acc = vec(0, PLAYER_GRAV)
         # inputing and processing key presses
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT]:
