@@ -13,7 +13,7 @@ class Game:
         pg.init()
         pg.mixer.init()
         # making game window
-        self.screen = pg.display.set_mode((width, height))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         # setting a title
         pg.display.set_caption(title)
         # clock
@@ -57,8 +57,23 @@ class Game:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
                 # setting player y position to platform top
-                self.player.pos.y = hits[0].rect.top+1
+                self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
+        # if player reaches top floor
+        if self.player.rect.top <= HEIGHT/4:
+            self.player.pos.y += abs(self.player.vel.y)
+            for plat in self.platforms:
+                plat.rect.y += abs(self.player.vel.y)
+                if plat.rect.top >= HEIGHT:
+                    plat.kill()
+
+        # spawning new platform to keep same number of platforms
+        while len(self.platforms) < 6:
+            width = random.randrange(50, 100)
+            p = Platform(random.randrange(0, WIDTH-width),
+                         random.randrange(-75, -30), width, 20)
+            self.platforms.add(p)
+            self.all_sprites.add(p)
 
     def events(self):
         # game loops events
