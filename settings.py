@@ -3,11 +3,13 @@ WIDTH = 500
 HEIGHT = 650
 title = "Platform Game"
 FPS = 60
+FONT_NAME = 'arial'
 
 # player properties
 PLAYER_ACC = 0.8
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.8
+PLAYER_JUMP = 20
 
 # starting platfroms
 PLATFORM_LIST = [(0, HEIGHT-40, WIDTH, 40), (WIDTH/2-50, HEIGHT*3/4, 100, 20),
