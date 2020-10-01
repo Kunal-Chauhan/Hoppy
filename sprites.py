@@ -15,9 +15,9 @@ class Player(pg.sprite.Sprite):
         # declaring reactangle for sprite object
         self.rect = self.image.get_rect()
         # centering our rect sprite
-        self.rect.center = (width/2, height/2)
+        self.rect.center = (WIDTH/2, HEIGHT/2)
         # starting position for object player
-        self.pos = vec(width/2, height/2)
+        self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
@@ -28,7 +28,7 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.x -= 1
         if hits:
-            self.vel.y = -15
+            self.vel.y = -20
 
     # updating the sprite
     def update(self):
@@ -48,10 +48,10 @@ class Player(pg.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel+(0.5*self.acc)
         # wrapping the sprite rectangle
-        if self.pos.x > width:
+        if self.pos.x > WIDTH:
             self.pos.x = 0
         if self.pos.x < 0:
-            self.pos.x = width
+            self.pos.x = WIDTH
         # putting player's midbottom at screen's center
         self.rect.midbottom = self.pos
 
