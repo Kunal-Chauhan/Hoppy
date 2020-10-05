@@ -1,7 +1,7 @@
 # game options and settings
 WIDTH = 500
 HEIGHT = 650
-title = "Platform Game"
+title = "HOPPY!"
 FPS = 60
 FONT_NAME = 'arial'
 
