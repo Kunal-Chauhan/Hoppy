@@ -62,7 +62,7 @@ class Game:
                 self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
 
-        # if player reaches top floor
+        # if player reaches 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
             self.player.pos.y += abs(self.player.vel.y)
             for plat in self.platforms:
