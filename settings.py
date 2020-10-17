@@ -4,6 +4,7 @@ HEIGHT = 650
 TITLE = "HOPPY!"
 FPS = 60
 FONT_NAME = 'arial'
+HS_FILE = "Highscore.txt"
 
 # player properties
 PLAYER_ACC = 0.8
