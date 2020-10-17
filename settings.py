@@ -1,7 +1,7 @@
 # game options and settings
 WIDTH = 500
 HEIGHT = 650
-title = "HOPPY!"
+TITLE = "HOPPY!"
 FPS = 60
 FONT_NAME = 'arial'
 
@@ -22,3 +22,5 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+LIGHTBLUE = (0, 155, 155)
+BGCOLOR = LIGHTBLUE
