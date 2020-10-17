@@ -15,7 +15,7 @@ class Game:
         # making game window
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         # setting a title
-        pg.display.set_caption(title)
+        pg.display.set_caption(TITLE)
         # clock
         self.clock = pg.time.Clock()
         # declaring variable for loop to run
@@ -108,20 +108,47 @@ class Game:
     def draw(self):
 
         # draw
-        self.screen.fill((0, 0, 0))
+        # adding backgroud color
+        self.screen.fill(BGCOLOR)
         # drawing sprite on screen
         self.all_sprites.draw(self.screen)
         self.draw_text(str(self.score), 22, WHITE, WIDTH/2, 15)
         # post drawing
         pg.display.flip()
 
+    # start screen
     def show_start_screen(self):
-        # start screen
-        pass
+        self.screen.fill(BGCOLOR)
+        self.draw_text(TITLE, 48, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text("Arrows to move and Space to jump",
+                       22, WHITE, WIDTH/2, HEIGHT / 2)
+        self.draw_text("Press a key to play", 22, WHITE, WIDTH/2, HEIGHT * 3/4)
+        pg.display.flip()
+        self.wait_for_key()
 
+    # game over or continue
     def show_go_screen(self):
-        # game over or continue
-        pass
+        if not self.running:
+            return
+        self.screen.fill(BGCOLOR)
+        self.draw_text("Game Over!", 48, WHITE, WIDTH/2, HEIGHT/4)
+        self.draw_text("Score: "+str(self.score),
+                       22, WHITE, WIDTH/2, HEIGHT / 2)
+        self.draw_text("Press a key to playagain", 22,
+                       WHITE, WIDTH/2, HEIGHT * 3/4)
+        pg.display.flip()
+        self.wait_for_key()
+
+    def wait_for_key(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(60)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.running = False
+                if event.type == pg.KEYUP:
+                    waiting = False
 
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)
