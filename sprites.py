@@ -9,10 +9,15 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         # surface to draw sprite on
         self.game = game
+        self.walking = False
+        self.jumping = False
+        # counting frames
+        self.current_frame = 0
+        self.last_update = 0
+        self.load_images()
         # setting character image
-        self.image = self.game.spritesheet.get_image(614, 1063, 120, 191)
-        # removing the black background from the image
-        self.image.set_colorkey(BLACK)
+        self.image = self.game.spritesheet.get_image(690, 406, 120, 201)
+
         # declaring reactangle for sprite object
         self.rect = self.image.get_rect()
         # centering our rect sprite
@@ -21,8 +26,30 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+    # loading all the images: frame-wise
 
+    def load_images(self):
+        self.standing_frames = [self.game.spritesheet.get_image(614, 1063, 120, 191),
+                                self.game.spritesheet.get_image(690, 406, 120, 201)]
+
+        for frame in self.standing_frames:
+            # removing the black background from the image
+            frame.set_colorkey(BLACK)
+
+        self.walk_frames_r = [self.game.spritesheet.get_image(678, 860, 120, 201),
+                              self.game.spritesheet.get_image(692, 1458, 120, 207)]
+
+        self.walk_frames_l = []
+
+        # flipping the right walk frames
+        for frame in self.walk_frames_r:
+            frame.set_colorkey(BLACK)
+            self.walk_frames_l.append(pg.transform.flip(frame, True, False))
+
+        self.jump_frame = self.game.spritesheet.get_image(382, 763, 150, 181)
+        self.jump_frame.set_colorkey(BLACK)
     # defining jump
+
     def jump(self):
         # jumping only when standing on platform
         self.rect.x += 1
@@ -33,6 +60,8 @@ class Player(pg.sprite.Sprite):
 
     # updating the sprite
     def update(self):
+        # adding animations
+        self.animate()
         # adding gravity to our player
         self.acc = vec(0, PLAYER_GRAV)
         # inputing and processing key presses
@@ -55,6 +84,21 @@ class Player(pg.sprite.Sprite):
             self.pos.x = WIDTH
         # putting player's midbottom at screen's center
         self.rect.midbottom = self.pos
+
+    def animate(self):
+        now = pg.time.get_ticks()
+        if not self.jumping and not self.walking:
+            # checking time since the frames last updated and changing frames automatically after 350 milliseconds
+            if now - self.last_update > 350:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.standing_frames)
+                bottom = self.rect.bottom
+                # changing the character image according to the frame number
+                self.image = self.standing_frames[self.current_frame]
+                # new rect for the next frame
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
 
 
 class Platform(pg.sprite.Sprite):

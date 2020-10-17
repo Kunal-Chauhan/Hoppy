@@ -151,7 +151,7 @@ class Game:
         self.draw_text("Game Over!", 48, WHITE, WIDTH/2, HEIGHT/4)
         self.draw_text("Score: "+str(self.score),
                        22, WHITE, WIDTH/2, HEIGHT / 2)
-        self.draw_text("Press a key to playagain", 22,
+        self.draw_text("Press a key to play again", 22,
                        WHITE, WIDTH/2, HEIGHT * 3/4)
         if self.score > self.highscore:
             self.highscore = self.score
