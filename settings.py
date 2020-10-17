@@ -5,6 +5,7 @@ TITLE = "HOPPY!"
 FPS = 60
 FONT_NAME = 'arial'
 HS_FILE = "Highscore.txt"
+SPRITESHEET = "spritesheet_jumper.png"
 
 # player properties
 PLAYER_ACC = 0.8

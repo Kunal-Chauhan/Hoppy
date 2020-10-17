@@ -9,9 +9,10 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         # surface to draw sprite on
         self.game = game
-        self.image = pg.Surface((30, 40))
-        # filling suface with colour
-        self.image.fill(YELLOW)
+        # setting character image
+        self.image = self.game.spritesheet.get_image(614, 1063, 120, 191)
+        # removing the black background from the image
+        self.image.set_colorkey(BLACK)
         # declaring reactangle for sprite object
         self.rect = self.image.get_rect()
         # centering our rect sprite
@@ -57,7 +58,7 @@ class Player(pg.sprite.Sprite):
 
 
 class Platform(pg.sprite.Sprite):
-    # initializing platform class
+   # initializing platform class
     def __init__(self, x, y, w, h):
         # initializing sprite
         pg.sprite.Sprite.__init__(self)
@@ -69,3 +70,17 @@ class Platform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+class Spritesheet:
+    # utility class for loading and parsing spritesheets
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load(filename).convert()
+
+    def get_image(self, x, y, width, height):
+        # grabbing an image out of a larger spritesheet
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        # making the character image smaller
+        image = pg.transform.scale(image, (width//2, height//2))
+        return image

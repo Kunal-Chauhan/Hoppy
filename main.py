@@ -25,14 +25,17 @@ class Game:
         self.font_name = pg.font.match_font(FONT_NAME)
         self.load_data()
 
-    # loading highscore
     def load_data(self):
+        # loading highscore
         self.dir = path.dirname(__file__)
+        img_dir = path.join(self.dir, 'img')
         with open(path.join(self.dir, HS_FILE), 'w') as f:
             try:
                 self.highscore = int(f.read())
             except:
                 self.highscore = 0
+        # loading spritesheet image
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
 
     # start new game
     def new(self):
