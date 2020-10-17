@@ -1,5 +1,6 @@
 from settings import*
 import pygame as pg
+from random import choice
 vec = pg.math.Vector2
 
 
@@ -21,9 +22,9 @@ class Player(pg.sprite.Sprite):
         # declaring reactangle for sprite object
         self.rect = self.image.get_rect()
         # centering our rect sprite
-        self.rect.center = (WIDTH/2, HEIGHT/2)
+        self.rect.center = (40, HEIGHT-100)
         # starting position for object player
-        self.pos = vec(WIDTH/2, HEIGHT/2)
+        self.pos = vec(40, HEIGHT-100)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
     # loading all the images: frame-wise
@@ -52,9 +53,9 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         # jumping only when standing on platform
-        self.rect.x += 1
+        self.rect.x += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
-        self.rect.x -= 1
+        self.rect.x -= 2
         if hits:
             self.vel.y = -PLAYER_JUMP
 
@@ -131,13 +132,16 @@ class Player(pg.sprite.Sprite):
 
 class Platform(pg.sprite.Sprite):
    # initializing platform class
-    def __init__(self, x, y, w, h):
+    def __init__(self, game,  x, y):
         # initializing sprite
         pg.sprite.Sprite.__init__(self)
-        # aming surface for platform
-        self.image = pg.Surface((w, h))
-        # coloring surface
-        self.image.fill(GREEN)
+        self.game = game
+        # getting platform images
+        images = [self.game.spritesheet.get_image(0, 288, 380, 94),
+                  self.game.spritesheet.get_image(213, 1662, 201, 100)]
+        # choosing random image from images list for the platform
+        self.image = choice(images)
+        self.image.set_colorkey(BLACK)
         # making rect for platform and defining x and y coordinate
         self.rect = self.image.get_rect()
         self.rect.x = x
