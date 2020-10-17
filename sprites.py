@@ -76,17 +76,45 @@ class Player(pg.sprite.Sprite):
         self.acc.x += self.vel.x*PLAYER_FRICTION
         # equation of motion
         self.vel += self.acc
+        # setting a threshold to stop the character
+        if abs(self.vel.x) < 0.1:
+            self.vel.x = 0
+
         self.pos += self.vel+(0.5*self.acc)
         # wrapping the sprite rectangle
-        if self.pos.x > WIDTH:
-            self.pos.x = 0
-        if self.pos.x < 0:
-            self.pos.x = WIDTH
+        # making the character go off the screen fully and then appear to the other side of the screen
+        if self.pos.x > WIDTH + self.rect.width / 2:
+            self.pos.x = 0 - self.rect.width / 2
+        if self.pos.x < 0 - self.rect.width / 2:
+            self.pos.x = WIDTH + self.rect.width / 2
         # putting player's midbottom at screen's center
         self.rect.midbottom = self.pos
 
     def animate(self):
         now = pg.time.get_ticks()
+        if self.vel.x != 0:
+            self.walking = True
+        else:
+            self.walking = False
+
+        # Show walk animation
+        if self.walking:
+            if now - self.last_update > 180:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.walk_frames_l)
+                bottom = self.rect.bottom
+
+                # if the character is going in right direction
+                if self.vel.x > 0:
+                    self.image = self.walk_frames_r[self.current_frame]
+                # if left
+                else:
+                    self.image = self.walk_frames_l[self.current_frame]
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
+
+        # Shoe idle animation
         if not self.jumping and not self.walking:
             # checking time since the frames last updated and changing frames automatically after 350 milliseconds
             if now - self.last_update > 350:
