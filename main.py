@@ -36,6 +36,11 @@ class Game:
                 self.highscore = 0
         # loading spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        # cloud images
+        self.cloud_images = []
+        for i in range(1, 4):
+            self.cloud_images.append(pg.image.load(
+                path.join(img_dir, 'cloud{}.png'.format(i))).convert())
 
         # loading sounds
         self.snd_dir = path.join(self.dir, 'snd')
@@ -54,6 +59,7 @@ class Game:
         self.powerups = pg.sprite.Group()
         # mob group
         self.mobs = pg.sprite.Group()
+        self.clouds = pg.sprite.Group()
         self.player = Player(self)
         # spawning a platform
         for plat in PLATFORM_LIST:
@@ -62,6 +68,10 @@ class Game:
         self.mob_timer = 0
         # loading music
         pg.mixer.music.load(path.join(self.snd_dir, 'GameTheme.ogg'))
+        # spawning clouds in new screen
+        for i in range(8):
+            c = Cloud(self)
+            c.rect.y += 500
         # running new game
         self.run()
 
@@ -113,7 +123,11 @@ class Game:
 
         # if player reaches 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
+            if random.randrange(100) < 15:
+                Cloud(self)
             self.player.pos.y += max(abs(self.player.vel.y), 2)
+            for cloud in self.clouds:
+                cloud.rect.y += max(abs(self.player.vel.y / 2), 2)
             for mob in self.mobs:
                 mob.rect.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
