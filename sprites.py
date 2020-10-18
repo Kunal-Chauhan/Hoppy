@@ -138,6 +138,7 @@ class Player(pg.sprite.Sprite):
                 # new rect for the next frame
                 self.rect = self.image.get_rect()
                 self.rect.bottom = bottom
+        self.mask = pg.mask.from_surface(self.image)
 
 
 class Platform(pg.sprite.Sprite):
@@ -232,6 +233,7 @@ class Mob(pg.sprite.Sprite):
         else:
             self.image = self.image_down
         self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
         self.rect.center = center
         self.rect.y += self.vy
         if self.rect.left > WIDTH + 100 or self.rect.right < -100:
