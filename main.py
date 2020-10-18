@@ -47,15 +47,19 @@ class Game:
     def new(self):
         self.score = 0
         # making a new sprite group
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         # making platform group to hold all the platforms
         self.platforms = pg.sprite.Group()
         # powerup group
         self.powerups = pg.sprite.Group()
+        # mob group
+        self.mobs = pg.sprite.Group()
         self.player = Player(self)
         # spawning a platform
         for plat in PLATFORM_LIST:
             Platform(self, *plat)
+
+        self.mob_timer = 0
         # loading music
         pg.mixer.music.load(path.join(self.snd_dir, 'GameTheme.ogg'))
         # running new game
@@ -79,6 +83,17 @@ class Game:
     def update(self):
         # updating properties
         self.all_sprites.update()
+
+        # spawning enemy mob
+        now = pg.time.get_ticks()
+        if (now-self.mob_timer) > 5000 + random.choice([-1000, -500, 0, 500, 1000]):
+            self.mob_timer = now
+            Mob(self)
+        # player hit mob
+        mob_hits = pg.sprite.spritecollide(self.player, self.mobs, False)
+        if mob_hits:
+            self.playing = False
+
         # check if playeer hits a platfrom only if falling
         # if velocity is downward
         if self.player.vel.y > 0:
@@ -98,6 +113,8 @@ class Game:
         # if player reaches 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
+            for mob in self.mobs:
+                mob.rect.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
                 plat.rect.y += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
@@ -155,8 +172,6 @@ class Game:
         self.screen.fill(BGCOLOR)
         # drawing sprite on screen
         self.all_sprites.draw(self.screen)
-        # making the player remain at the front of the platform
-        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 22, WHITE, WIDTH/2, 15)
         # post drawing
         pg.display.flip()
