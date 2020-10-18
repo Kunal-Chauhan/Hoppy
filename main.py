@@ -41,7 +41,7 @@ class Game:
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump33.wav'))
         self.boost_sound = pg.mixer.Sound(
-            path.join(self.snd_dir, 'Jump33.wav'))
+            path.join(self.snd_dir, 'Boost1.ogg'))
     # start new game
 
     def new(self):
