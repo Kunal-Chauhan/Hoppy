@@ -40,6 +40,8 @@ class Game:
         # loading sounds
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump33.wav'))
+        self.boost_sound = pg.mixer.Sound(
+            path.join(self.snd_dir, 'Jump33.wav'))
     # start new game
 
     def new(self):
@@ -48,13 +50,12 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         # making platform group to hold all the platforms
         self.platforms = pg.sprite.Group()
+        # powerup group
+        self.powerups = pg.sprite.Group()
         self.player = Player(self)
-        self.all_sprites.add(self.player)
         # spawning a platform
         for plat in PLATFORM_LIST:
-            p = Platform(self, *plat)
-            self.all_sprites.add(p)
-            self.platforms.add(p)
+            Platform(self, *plat)
         # loading music
         pg.mixer.music.load(path.join(self.snd_dir, 'GameTheme.ogg'))
         # running new game
@@ -87,11 +88,12 @@ class Game:
                 for hit in hits:
                     if hit.rect.bottom > lowest.rect.bottom:
                         lowest = hit
-                # setting player y position to platform top
-                if self.player.pos.y < hits[0].rect.centery:
-                    self.player.pos.y = hits[0].rect.top
-                    self.player.vel.y = 0
-                    self.player.jumping = False
+                if self.player.pos.x < lowest.rect.right+10 and self.player.pos.x > lowest.rect.left-10:
+                    # setting player y position to platform top
+                    if self.player.pos.y < hits[0].rect.centery:
+                        self.player.pos.y = hits[0].rect.top
+                        self.player.vel.y = 0
+                        self.player.jumping = False
 
         # if player reaches 1/4 of screen
         if self.player.rect.top <= HEIGHT/4:
@@ -101,6 +103,14 @@ class Game:
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
+
+        # player hit power
+        pow_hits = pg.sprite.spritecollide(self.player, self.powerups, True)
+        for pow in pow_hits:
+            if pow.type == 'boost':
+                self.boost_sound.play()
+                self.player.vel.y = -BOOST_POWER
+                self.player.jumping = False
 
         # player die
         if self.player.rect.bottom > HEIGHT:
@@ -114,10 +124,8 @@ class Game:
         # spawning new platform to keep same number of platforms
         while len(self.platforms) < 6:
             width = random.randrange(50, 100)
-            p = Platform(self, random.randrange(0, WIDTH-width),
-                         random.randrange(-75, -30))
-            self.platforms.add(p)
-            self.all_sprites.add(p)
+            Platform(self, random.randrange(0, WIDTH-width),
+                     random.randrange(-75, -30))
 
     def events(self):
         # game loops events
