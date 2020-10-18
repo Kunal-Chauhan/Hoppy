@@ -10,7 +10,7 @@ PLAYER_LAYER = 2
 PLATFORM_LAYER = 1
 POW_LAYER = 1
 MOB_LAYER = 2
-
+CLOUD_LAYER = 0
 
 # player properties
 PLAYER_ACC = 0.8
